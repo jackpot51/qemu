@@ -214,6 +214,10 @@ static int net_socket_mcast_create(struct sockaddr_in *mcastaddr,
                                    struct in_addr *localaddr,
                                    Error **errp)
 {
+#ifdef __redox__
+    error_setg(errp, "net_socket_mcast_create not supported on Redox");
+    return -1;
+#else
     struct ip_mreq imr;
     int fd;
     int val, ret;
@@ -301,6 +305,7 @@ fail:
     if (fd >= 0)
         close(fd);
     return -1;
+#endif
 }
 
 static void net_socket_cleanup(NetClientState *nc)

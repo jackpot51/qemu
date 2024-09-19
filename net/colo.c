@@ -123,14 +123,18 @@ void fill_connection_key(Packet *pkt, ConnectionKey *key, bool reverse)
     case IPPROTO_TCP:
     case IPPROTO_UDP:
     case IPPROTO_DCCP:
+#ifndef __redox__
     case IPPROTO_ESP:
+#endif
     case IPPROTO_SCTP:
     case IPPROTO_UDPLITE:
         tmp_ports = *(uint32_t *)(pkt->transport_header);
         break;
+#ifndef __redox__
     case IPPROTO_AH:
         tmp_ports = *(uint32_t *)(pkt->transport_header + 4);
         break;
+#endif
     default:
         break;
     }

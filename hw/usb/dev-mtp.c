@@ -617,11 +617,15 @@ static void usb_mtp_object_readdir(MTPState *s, MTPObject *o)
     }
     o->have_children = true;
 
+#ifdef __redox__
+    dir = opendir(o->path);
+#else
     fd = open(o->path, O_DIRECTORY | O_CLOEXEC | O_NOFOLLOW);
     if (fd < 0) {
         return;
     }
     dir = fdopendir(fd);
+#endif
     if (!dir) {
         close(fd);
         return;

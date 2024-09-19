@@ -17,8 +17,14 @@
 #include "qemu/osdep.h"
 #include "qemu/drm.h"
 
+#ifndef __redox__
 #include <glob.h>
+#endif
 #include <dirent.h>
+
+#ifndef O_NOCTTY
+#define O_NOCTTY 0
+#endif
 
 int qemu_drm_rendernode_open(const char *rendernode)
 {

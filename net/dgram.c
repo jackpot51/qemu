@@ -145,6 +145,10 @@ static int net_dgram_mcast_create(struct sockaddr_in *mcastaddr,
                                   struct in_addr *localaddr,
                                   Error **errp)
 {
+#ifdef __redox__
+    error_setg(errp, "net_dgram_mcast_create not supported on Redox");
+    return -1;
+#else
     struct ip_mreq imr;
     int fd;
     int val, ret;
@@ -233,6 +237,7 @@ fail:
         close(fd);
     }
     return -1;
+#endif
 }
 
 static void net_dgram_cleanup(NetClientState *nc)

@@ -51,7 +51,11 @@ void os_setup_early_signal_handling(void)
 
 static void termsig_handler(int signal, siginfo_t *info, void *c)
 {
+#ifdef __redox__
+    qemu_system_killed(info->si_signo, 0);
+#else
     qemu_system_killed(info->si_signo, info->si_pid);
+#endif
 }
 
 void os_setup_signal_handling(void)

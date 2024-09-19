@@ -30,7 +30,9 @@
 #include <sys/ioctl.h>
 #include <sys/wait.h>
 #include <sys/socket.h>
+#ifndef __redox__
 #include <net/if.h>
+#endif
 
 #include "net/eth.h"
 #include "net/net.h"
@@ -440,6 +442,10 @@ static void launch_script(const char *setup_script, const char *ifname,
 
 static int recv_fd(int c)
 {
+#ifdef __redox__
+    errno = ENOSYS;
+    return -1;
+#else
     int fd;
     uint8_t msgbuf[CMSG_SPACE(sizeof(fd))];
     struct msghdr msg = {
@@ -470,6 +476,7 @@ static int recv_fd(int c)
     }
 
     return len;
+#endif
 }
 
 static int net_bridge_run_helper(const char *helper, const char *bridge,
