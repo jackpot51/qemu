@@ -177,7 +177,7 @@ _qmp_fd_vsend_fds(int fd, int *fds, size_t fds_num,
     }
 }
 
-#if !defined(_WIN32) && !defined(__redox__)
+#ifndef _WIN32
 void qmp_fd_vsend_fds(int fd, int *fds, size_t fds_num,
                       const char *fmt, va_list ap)
 {

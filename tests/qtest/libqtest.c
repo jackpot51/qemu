@@ -772,7 +772,7 @@ int qtest_socket_server(const char *socket_path)
     return sock;
 }
 
-#if !defined(_WIN32) && !defined(__redox__)
+#ifndef _WIN32
 void qtest_qmp_vsend_fds(QTestState *s, int *fds, size_t fds_num,
                          const char *fmt, va_list ap)
 {
@@ -785,7 +785,7 @@ void qtest_qmp_vsend(QTestState *s, const char *fmt, va_list ap)
     qmp_fd_vsend(s->qmp_fd, fmt, ap);
 }
 
-#if !defined(_WIN32) && !defined(__redox__)
+#ifndef _WIN32
 QDict *qtest_vqmp_fds(QTestState *s, int *fds, size_t fds_num,
                       const char *fmt, va_list ap)
 {
@@ -804,7 +804,7 @@ QDict *qtest_vqmp(QTestState *s, const char *fmt, va_list ap)
     return qtest_qmp_receive(s);
 }
 
-#if !defined(_WIN32) && !defined(__redox__)
+#ifndef _WIN32
 QDict *qtest_qmp_fds(QTestState *s, int *fds, size_t fds_num,
                      const char *fmt, ...)
 {
@@ -1334,7 +1334,7 @@ void qtest_vqmp_assert_success(QTestState *qts,
     qobject_unref(response);
 }
 
-#if !defined(_WIN32) && !defined(__redox__)
+#ifndef _WIN32
 QDict *qtest_vqmp_fds_assert_success_ref(QTestState *qts, int *fds, size_t nfds,
                                          const char *fmt, va_list args)
 {
@@ -1394,7 +1394,7 @@ void qtest_qmp_assert_success(QTestState *qts, const char *fmt, ...)
     va_end(ap);
 }
 
-#if !defined(_WIN32) && !defined(__redox__)
+#ifndef _WIN32
 QDict *qtest_qmp_fds_assert_success_ref(QTestState *qts, int *fds, size_t nfds,
                                         const char *fmt, ...)
 {
