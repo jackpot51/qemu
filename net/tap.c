@@ -489,6 +489,10 @@ static void launch_script(const char *setup_script, const char *ifname,
 
 static int recv_fd(int c)
 {
+#ifdef __redox__
+    errno = ENOSYS;
+    return -1;
+#else
     int fd;
     uint8_t msgbuf[CMSG_SPACE(sizeof(fd))];
     struct msghdr msg = {
@@ -519,6 +523,7 @@ static int recv_fd(int c)
     }
 
     return len;
+#endif
 }
 
 static int net_bridge_run_helper(const char *helper, const char *bridge,
