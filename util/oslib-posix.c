@@ -401,7 +401,11 @@ static void *do_madv_populate_write_pages(void *arg)
 static inline int get_memset_num_threads(size_t hpagesize, size_t numpages,
                                          int max_threads)
 {
+#ifdef __redox__
+    long host_procs = 1;
+#else
     long host_procs = sysconf(_SC_NPROCESSORS_ONLN);
+#endif
     int ret = 1;
 
     if (host_procs > 0) {
@@ -752,6 +756,7 @@ void sigaction_invoke(struct sigaction *action,
     si.si_errno = info->ssi_errno;
     si.si_code = info->ssi_code;
 
+#ifndef __redox__
     /* Convert the minimal set of fields defined by POSIX.
      * Positive si_code values are reserved for kernel-generated
      * signals, where the valid siginfo fields are determined by
@@ -772,6 +777,7 @@ void sigaction_invoke(struct sigaction *action,
         si.si_status = info->ssi_status;
         si.si_uid = info->ssi_uid;
     }
+#endif
     action->sa_sigaction(info->ssi_signo, &si, NULL);
 }
 

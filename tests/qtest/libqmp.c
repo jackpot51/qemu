@@ -93,7 +93,7 @@ QDict *qmp_fd_receive(int fd)
     return qmp.response;
 }
 
-#ifndef _WIN32
+#if !defined(_WIN32) && !defined(__redox__)
 /* Sends a message and file descriptors to the socket.
  * It's needed for qmp-commands like getfd/add-fd */
 static void socket_send_fds(int socket_fd, int *fds, size_t fds_num,
@@ -140,7 +140,7 @@ _qmp_fd_vsend_fds(int fd, int *fds, size_t fds_num,
 {
     QObject *qobj;
 
-#ifdef _WIN32
+#if defined(_WIN32) || defined(__redox__)
     assert(fds_num == 0);
 #endif
 
@@ -162,7 +162,7 @@ _qmp_fd_vsend_fds(int fd, int *fds, size_t fds_num,
             fprintf(stderr, "%s", str->str);
         }
 
-#ifndef _WIN32
+#if !defined(_WIN32) && !defined(__redox__)
         /* Send QMP request */
         if (fds && fds_num > 0) {
             socket_send_fds(fd, fds, fds_num, str->str, str->len);
@@ -177,7 +177,7 @@ _qmp_fd_vsend_fds(int fd, int *fds, size_t fds_num,
     }
 }
 
-#ifndef _WIN32
+#if !defined(_WIN32) && !defined(__redox__)
 void qmp_fd_vsend_fds(int fd, int *fds, size_t fds_num,
                       const char *fmt, va_list ap)
 {

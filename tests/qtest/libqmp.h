@@ -21,7 +21,7 @@
 #include "qapi/qmp/qdict.h"
 
 QDict *qmp_fd_receive(int fd);
-#ifndef _WIN32
+#if !defined(_WIN32) && !defined(__redox__)
 void qmp_fd_vsend_fds(int fd, int *fds, size_t fds_num,
                       const char *fmt, va_list ap) G_GNUC_PRINTF(4, 0);
 #endif

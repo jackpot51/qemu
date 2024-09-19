@@ -30,7 +30,9 @@
 #include <sys/ioctl.h>
 #include <sys/wait.h>
 #include <sys/socket.h>
+#ifndef __redox__
 #include <net/if.h>
+#endif
 
 #include "net/eth.h"
 #include "net/net.h"

@@ -42,6 +42,13 @@
 extern "C" {
 #endif
 
+#ifdef __redox__
+//TODO: implement sigsetjmp/siglongjmp on Redox
+#define sigjmp_buf jmp_buf
+#define sigsetjmp(env, savemask) setjmp(env)
+#define siglongjmp(env, val) longjmp(env, val)
+#endif
+
 void os_set_line_buffering(void);
 void os_setup_early_signal_handling(void);
 void os_set_proc_name(const char *s);

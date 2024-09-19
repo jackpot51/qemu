@@ -184,6 +184,7 @@ static inline void host_to_target_siginfo_noswap(target_siginfo_t *tinfo,
     tinfo->si_signo = sig;
     tinfo->si_errno = info->si_errno;
     tinfo->si_code = info->si_code;
+#ifndef __redox__
     tinfo->si_pid = info->si_pid;
     tinfo->si_uid = info->si_uid;
     tinfo->si_status = info->si_status;
@@ -257,6 +258,7 @@ static inline void host_to_target_siginfo_noswap(target_siginfo_t *tinfo,
         break;
     }
     tinfo->si_code = deposit32(si_code, 24, 8, si_type);
+#endif
 }
 
 static void tswap_siginfo(target_siginfo_t *tinfo, const target_siginfo_t *info)
@@ -267,6 +269,7 @@ static void tswap_siginfo(target_siginfo_t *tinfo, const target_siginfo_t *info)
     __put_user(info->si_signo, &tinfo->si_signo);
     __put_user(info->si_errno, &tinfo->si_errno);
     __put_user(si_code, &tinfo->si_code); /* Zero out si_type, it's internal */
+#ifndef __redox__
     __put_user(info->si_pid, &tinfo->si_pid);
     __put_user(info->si_uid, &tinfo->si_uid);
     __put_user(info->si_status, &tinfo->si_status);
@@ -312,6 +315,7 @@ static void tswap_siginfo(target_siginfo_t *tinfo, const target_siginfo_t *info)
     default:
         g_assert_not_reached();
     }
+#endif
 }
 
 void host_to_target_siginfo(target_siginfo_t *tinfo, const siginfo_t *info)
@@ -764,6 +768,7 @@ static void setup_frame(int sig, int code, struct target_sigaction *ka,
         frame->sf_si.si_signo = tinfo->si_signo;
         frame->sf_si.si_errno = tinfo->si_errno;
         frame->sf_si.si_code = tinfo->si_code;
+#ifndef __redox__
         frame->sf_si.si_pid = tinfo->si_pid;
         frame->sf_si.si_uid = tinfo->si_uid;
         frame->sf_si.si_status = tinfo->si_status;
@@ -779,6 +784,7 @@ static void setup_frame(int sig, int code, struct target_sigaction *ka,
          */
         memcpy(&frame->sf_si._reason, &tinfo->_reason,
                sizeof(tinfo->_reason));
+#endif
     }
 
     set_sigtramp_args(env, sig, frame, frame_addr, ka);

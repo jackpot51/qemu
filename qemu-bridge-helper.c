@@ -181,6 +181,7 @@ static void prep_ifreq(struct ifreq *ifr, const char *ifname)
     snprintf(ifr->ifr_name, IFNAMSIZ, "%s", ifname);
 }
 
+#ifndef __redox__
 static int send_fd(int c, int fd)
 {
     char msgbuf[CMSG_SPACE(sizeof(fd))];
@@ -207,6 +208,7 @@ static int send_fd(int c, int fd)
 
     return sendmsg(c, &msg, 0);
 }
+#endif
 
 #ifdef CONFIG_LIBCAP_NG
 static int drop_privileges(void)
