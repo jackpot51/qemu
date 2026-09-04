@@ -401,11 +401,7 @@ static void *do_madv_populate_write_pages(void *arg)
 static inline int get_memset_num_threads(size_t hpagesize, size_t numpages,
                                          int max_threads)
 {
-#ifdef __redox__
-    long host_procs = 1;
-#else
     long host_procs = sysconf(_SC_NPROCESSORS_ONLN);
-#endif
     int ret = 1;
 
     if (host_procs > 0) {
