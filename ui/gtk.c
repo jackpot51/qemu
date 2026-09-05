@@ -1152,6 +1152,15 @@ static const guint16 *gd_get_keymap(size_t *maplen)
     }
 #endif
 
+#ifdef GDK_WINDOWING_ORBITAL
+    if (getenv("ORBITAL_DISPLAY")) {
+        trace_gd_keymap_windowing("orbital");
+        // uses wayland/evdev mapping
+        *maplen = qemu_input_map_xorgevdev_to_qcode_len;
+        return qemu_input_map_xorgevdev_to_qcode;
+    }
+#endif
+
 #ifdef GDK_WINDOWING_BROADWAY
     if (GDK_IS_BROADWAY_DISPLAY(dpy)) {
         trace_gd_keymap_windowing("broadway");
